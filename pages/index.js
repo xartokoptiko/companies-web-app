@@ -32,10 +32,10 @@ const loginWithCRedentials = (username, password) => {
         const response_body = JSON.parse(body.toString());
         console.log(response_body);
         console.log(response_body["access_token"]);
-        
-        localStorage.setItem("username_stored",username)
-        localStorage.setItem("password_stored",password)
-        localStorage.setItem("access_token", response_body["access_token"])
+
+        localStorage.setItem("username_stored", username);
+        localStorage.setItem("password_stored", password);
+        localStorage.setItem("access_token", response_body["access_token"]);
         Router.push("/home");
       } else {
       }
