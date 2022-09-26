@@ -1,8 +1,6 @@
 import Head from "next/head";
 import { useState } from "react";
 import { FaRegEnvelope, FaLock } from "react-icons/fa";
-import { getCookies, setCookie, deleteCookie } from "cookies-next";
-import { NextResponse } from "next/server";
 import Router from "next/router";
 
 const loginWithCRedentials = (username, password) => {
@@ -34,15 +32,10 @@ const loginWithCRedentials = (username, password) => {
         const response_body = JSON.parse(body.toString());
         console.log(response_body);
         console.log(response_body["access_token"]);
-
-        setCookie("username", username);
-        setCookie("password", password);
-        setCookie("Cookietoken", response_body["acces_token"], {
-          path:"/home",
-          sameSite:true,
-          maxAge: 3600
-        });
-
+        
+        localStorage.setItem("username_stored",username)
+        localStorage.setItem("password_stored",password)
+        localStorage.setItem("access_token", response_body["access_token"])
         Router.push("/home");
       } else {
       }

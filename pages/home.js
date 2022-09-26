@@ -1,15 +1,23 @@
 import Head from "next/head";
 import { FaSearch, FaUser, FaSignOutAlt, FaBuilding, FaPeopleArrows, FaScrewdriver} from "react-icons/fa";
-import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export default function Home() {
     const router = useRouter()
-    let username = getCookie('username')
-    let password = getCookie('password')
-    let token = getCookie('Cookietoken')
-    console.log(token)
+    let username = ""
+    let password = ""
+    let token = ""
+    
+    try{
+        username = localStorage.getItem("username_stored")
+        password = localStorage.getItem("username_stored")
+        token = localStorage.getItem("access_token")
+        console.log(token)
+        console.log(username)
+        console.log(password)
+    }catch{}
+
 
     useEffect(() => {
         if(token == ""){
@@ -69,7 +77,7 @@ export default function Home() {
 
             <div className="bg-white rounded-2xl items-center justify-start p-5 shadow-2xl flex flex-col h-[85vh] overflow-y-scroll">
 
-                <div className="flex flex-row justify-center items-center mb-5">
+                {/* <div className="flex flex-row justify-center items-center mb-5">
                     <div className=" flex justify-center items-center mr-9">
                         <p className="font-bold mr-3">Search by name </p>
                         <div className=" p-3 bg-gray-200 flex rounded-2xl items-center ">
@@ -87,7 +95,9 @@ export default function Home() {
 
                 </div>
 
-                <div className="border-2 w-full border-gray-200 inline-block mb-2 rounded-2xl"></div>
+                <div className="border-2 w-full border-gray-200 inline-block mb-2 rounded-2xl"></div> */}
+
+                {/* Grid for the companies */}
 
             </div>
 
