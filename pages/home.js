@@ -11,12 +11,21 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Companies from "../components/companies";
 import CompanyInfo from "../components/companyInfo"
+import Account from "../components/account";
+import UnderDevelopment from "../components/underDevelopment";
 
 const activateCompanies = (setter) => {
     setter("companies")
 }
 const activateCompany = (setter) => {
     setter("company")
+}
+
+const activateAccount = (setter) => {
+    setter("account")
+}
+const activateDevelopment = (setter) => {
+    setter("dev")
 }
 
 export default function Home() {
@@ -55,7 +64,7 @@ export default function Home() {
           {/* This is the side bar  */}
           <div className="flex justify-center items-center">
             <FaUser className="text-white mr-3" />
-            <a className="text-white font-bold">
+            <a href="#" onClick={() => {activateAccount(setComp)}} className="text-white font-bold">
               My Account
             </a>
           </div>
@@ -76,7 +85,7 @@ export default function Home() {
 
             <div className="flex justify-center items-center mb-3">
               <FaScrewdriver className="text-white mr-3" />
-              <a href="#" className="text-white font-bold">
+              <a href="#" onClick={() => {activateDevelopment(setComp)}} className="text-white font-bold">
                 Settings
               </a>
             </div>
@@ -101,6 +110,9 @@ export default function Home() {
 
                 {active_comp === "companies" && <Companies token={token}/> }
                 {active_comp === "company" && <CompanyInfo/> }
+                {active_comp === "account" && <Account/> }
+                {active_comp === "dev" && <UnderDevelopment/>}
+                
 
           </div>
         </div>

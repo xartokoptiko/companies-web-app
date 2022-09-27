@@ -37,7 +37,7 @@ const Companies = ({token}) => {
     <div className="w-full flex flex-col items-center ">
       <div className="flex flex-row justify-center items-center mb-5">
         <div className=" flex justify-center items-center mr-9">
-          <p className="font-bold mr-3">Search by name </p>
+          <p className="font-bold mr-3">Search company by name </p>
           <div className=" p-3 bg-gray-200 flex rounded-2xl items-center ">
             <FaSearch className="text-gray-400 mr-2" />
             <input
