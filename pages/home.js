@@ -1,30 +1,46 @@
 import Head from "next/head";
-import { FaSearch, FaUser, FaSignOutAlt, FaBuilding, FaPeopleArrows, FaScrewdriver} from "react-icons/fa";
+import {
+  FaSearch,
+  FaUser,
+  FaSignOutAlt,
+  FaBuilding,
+  FaPeopleArrows,
+  FaScrewdriver,
+} from "react-icons/fa";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import Companies from "../components/companies"
+import { useEffect, useState } from "react";
+import Companies from "../components/companies";
+import CompanyInfo from "../components/companyInfo"
+
+const activateCompanies = (setter) => {
+    setter("companies")
+}
+const activateCompany = (setter) => {
+    setter("company")
+}
 
 export default function Home() {
-    const router = useRouter()
-    let username = ""
-    let password = ""
-    let token = ""
-    
-    try{
-        username = localStorage.getItem("username_stored")
-        password = localStorage.getItem("username_stored")
-        token = localStorage.getItem("access_token")
-        console.log(token)
-        console.log(username)
-        console.log(password)
-    }catch{}
+  const router = useRouter();
+  const [active_comp, setComp] = useState("companies")
 
+  let username = "";
+  let password = "";
+  let token = "";
 
-    useEffect(() => {
-        if(token == ""){
-            router.push("/")
-        }
-    })
+  try {
+    username = localStorage.getItem("username_stored");
+    password = localStorage.getItem("username_stored");
+    token = localStorage.getItem("access_token");
+    console.log(token);
+    console.log(username);
+    console.log(password);
+  } catch {}
+
+  useEffect(() => {
+    if (token == "") {
+      router.push("/");
+    }
+  });
 
   return (
     <div>
@@ -34,54 +50,59 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen flex justify-start overflow-y-hidden ">
-
-        <div className=" h-screen px-4 pt-8 bg-cyan-600 flex justify-between flex-col w-60 "> {/* This is the side bar  */ }
-
-            <div className="flex justify-center items-center">
-                <FaUser className="text-white mr-3"/>
-                <a href="#" className="text-white font-bold">My Account</a>
+        <div className=" h-screen px-4 pt-8 bg-cyan-600 flex justify-between flex-col w-60 ">
+          {" "}
+          {/* This is the side bar  */}
+          <div className="flex justify-center items-center">
+            <FaUser className="text-white mr-3" />
+            <a className="text-white font-bold">
+              My Account
+            </a>
+          </div>
+          <div className="flex-row justify-center items-center">
+            <div className="flex justify-center items-center mb-3">
+              <FaBuilding className="text-white mr-3" />
+              <a href="#" onClick={() => {activateCompanies(setComp)}} className="text-white font-bold">
+                Companies
+              </a>
             </div>
 
-            <div className="flex-row justify-center items-center">
-
-                <div className="flex justify-center items-center mb-3">
-                    <FaBuilding className="text-white mr-3"/>
-                    <a href="#" className="text-white font-bold">Companies</a>
-                </div>
-
-                <div className="flex justify-center items-center mb-3">
-                    <FaPeopleArrows className="text-white mr-3"/>
-                    <a href="#" className="text-white font-bold">Employees</a>
-                </div>
-
-                <div className="flex justify-center items-center mb-3">
-                    <FaScrewdriver className="text-white mr-3"/>
-                    <a href="#" className="text-white font-bold">Settings</a>
-                </div>
-
+            <div className="flex justify-center items-center mb-3">
+              <FaPeopleArrows className="text-white mr-3" />
+              <a href="#" onClick={() => {activateCompany(setComp)}} className="text-white font-bold">
+                Employees
+              </a>
             </div>
 
-            
-                
-            <a href="http://localhost:3000" className="text-white font-bold flex justify-center
+            <div className="flex justify-center items-center mb-3">
+              <FaScrewdriver className="text-white mr-3" />
+              <a href="#" className="text-white font-bold">
+                Settings
+              </a>
+            </div>
+          </div>
+          <a
+            href="http://localhost:3000"
+            className="text-white font-bold flex justify-center
             items-center mb-5 border-2 rounded-full p-2
             hover:text-cyan-600 hover:bg-white"
-            >Sign Out
-            </a>
-        
-
+          >
+            Sign Out
+          </a>
         </div>
 
         <div className="flex-1 bg-gray-100 p-5 h-screen">
+          <p className="font-bold mb-5">
+            {" "}
+            <span className="text-cyan-600">Companies</span> Service
+          </p>
 
-            <p className="font-bold mb-5"> <span className="text-cyan-600">Companies</span> Service</p>
+          <div className="bg-white rounded-2xl items-center justify-start p-5 shadow-2xl flex flex-col h-[85vh] overflow-y-scroll">
 
-            <div className="bg-white rounded-2xl items-center justify-start p-5 shadow-2xl flex flex-col h-[85vh] overflow-y-scroll">
+                {active_comp === "companies" && <Companies token={token}/> }
+                {active_comp === "company" && <CompanyInfo/> }
 
-                <Companies/>
-
-            </div>
-
+          </div>
         </div>
       </main>
     </div>

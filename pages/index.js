@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaRegEnvelope, FaLock } from "react-icons/fa";
 import Router from "next/router";
 
-const loginWithCRedentials = (username, password) => {
+const loginWithCRedentials = (username, password, setUser, setPass) => {
   const qs = require("querystring");
   const http = require("http");
 
@@ -38,6 +38,9 @@ const loginWithCRedentials = (username, password) => {
         localStorage.setItem("access_token", response_body["access_token"]);
         Router.push("/home");
       } else {
+        setUser('')
+        setPass('')
+        alert("Invalid Username or password")
       }
     });
   });
@@ -55,6 +58,7 @@ const loginWithCRedentials = (username, password) => {
 };
 
 export default function index() {
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -114,7 +118,7 @@ export default function index() {
               </a>
 
               <button
-                onClick={(e) => loginWithCRedentials(username, password)}
+                onClick={(e) => loginWithCRedentials(username, password, setUsername, setPassword)}
                 className="border-2 border-cyan-600 text-cyan-600 rounded-full py-2 px-10 inline-block
           hover:bg-cyan-600 hover:text-white"
               >
