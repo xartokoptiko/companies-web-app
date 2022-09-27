@@ -46,7 +46,7 @@ export default function Home() {
   } catch {}
 
   useEffect(() => {
-    if (token == "") {
+    if (token == "" || token == null) {
       router.push("/");
     }
   });

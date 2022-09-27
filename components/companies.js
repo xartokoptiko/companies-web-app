@@ -1,5 +1,8 @@
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import Company from "../components/company";
+import RefreshToken from "../lib/refreshToken";
 
 const getAllCompanies = (token, page, size) => {
   const http = require("http");
@@ -24,8 +27,13 @@ const getAllCompanies = (token, page, size) => {
     });
 
     res.on("end", function () {
-      const body = Buffer.concat(chunks);
-      console.log(body.toString());
+        if(res.statusCode == 200){
+            const body = Buffer.concat(chunks);
+            console.log(body.toString());
+        }else{
+            RefreshToken()
+        }
+      
     });
   });
 
@@ -33,6 +41,14 @@ const getAllCompanies = (token, page, size) => {
 };
 
 const Companies = ({token}) => {
+    const router = useRouter()
+
+    useEffect(()=>{
+        if(token == "null" || token == null){
+            router.push("/")
+        }
+    })
+
   return (
     <div className="w-full flex flex-col items-center ">
       <div className="flex flex-row justify-center items-center mb-5">
