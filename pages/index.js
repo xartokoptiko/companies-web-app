@@ -2,8 +2,15 @@ import Head from "next/head";
 import { useState } from "react";
 import { FaRegEnvelope, FaLock } from "react-icons/fa";
 import Router from "next/router";
+import { useCookies } from "react-cookie";
 
-const loginWithCRedentials = (username, password, setUser, setPass) => {
+const loginWithCRedentials = (
+  username,
+  password,
+  setUser,
+  setPass,
+  setCookie
+) => {
   const qs = require("querystring");
   const http = require("http");
 
@@ -36,11 +43,16 @@ const loginWithCRedentials = (username, password, setUser, setPass) => {
         localStorage.setItem("username_stored", username);
         localStorage.setItem("password_stored", password);
         localStorage.setItem("access_token", response_body["access_token"]);
+
+        setCookie("Username", username, { path: "/" });
+        setCookie("Password", password, { path: "/" });
+        setCookie("Token_cookie", response_body["access_token"], { path: "/" });
+
         Router.push("/home");
       } else {
-        setUser('')
-        setPass('')
-        alert("Invalid Username or password")
+        setUser("");
+        setPass("");
+        alert("Invalid Username or password");
       }
     });
   });
@@ -58,9 +70,9 @@ const loginWithCRedentials = (username, password, setUser, setPass) => {
 };
 
 export default function index() {
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [cookies, setCookie] = useCookies(["user"]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-200">
@@ -118,7 +130,15 @@ export default function index() {
               </a>
 
               <button
-                onClick={(e) => loginWithCRedentials(username, password, setUsername, setPassword)}
+                onClick={(e) =>
+                  loginWithCRedentials(
+                    username,
+                    password,
+                    setUsername,
+                    setPassword,
+                    setCookie
+                  )
+                }
                 className="border-2 border-cyan-600 text-cyan-600 rounded-full py-2 px-10 inline-block
           hover:bg-cyan-600 hover:text-white"
               >

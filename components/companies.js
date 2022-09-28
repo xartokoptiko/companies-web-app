@@ -40,11 +40,11 @@ const getAllCompanies = (token, page, size) => {
   req.end();
 };
 
-const Companies = ({token}) => {
+const Companies = ({token, username, password}) => {
     const router = useRouter()
 
     useEffect(()=>{
-        if(token == "null" || token == null){
+        if(token == "" || token == null){
             router.push("/")
         }
     })

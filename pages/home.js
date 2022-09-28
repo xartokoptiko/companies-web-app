@@ -9,37 +9,39 @@ import {
 } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import Companies from "../components/companies";
-import CompanyInfo from "../components/companyInfo"
+import CompanyInfo from "../components/companyInfo";
 import Account from "../components/account";
 import UnderDevelopment from "../components/underDevelopment";
 
 const activateCompanies = (setter) => {
-    setter("companies")
-}
+  setter("companies");
+};
 const activateCompany = (setter) => {
-    setter("company")
-}
+  setter("company");
+};
 
 const activateAccount = (setter) => {
-    setter("account")
-}
+  setter("account");
+};
 const activateDevelopment = (setter) => {
-    setter("dev")
-}
+  setter("dev");
+};
 
 export default function Home() {
   const router = useRouter();
-  const [active_comp, setComp] = useState("companies")
+  const [active_comp, setComp] = useState("companies");
+  const [cookies, setCookie] = useCookies(["user"]);
 
   let username = "";
   let password = "";
   let token = "";
 
   try {
-    username = localStorage.getItem("username_stored");
-    password = localStorage.getItem("username_stored");
-    token = localStorage.getItem("access_token");
+    username = cookies.Username;
+    password = cookies.Password;
+    token = cookies.Token_cookie;
     console.log(token);
     console.log(username);
     console.log(password);
@@ -64,28 +66,52 @@ export default function Home() {
           {/* This is the side bar  */}
           <div className="flex justify-center items-center">
             <FaUser className="text-white mr-3" />
-            <a href="#" onClick={() => {activateAccount(setComp)}} className="text-white font-bold">
+            <a
+              href="#"
+              onClick={() => {
+                activateAccount(setComp);
+              }}
+              className="text-white font-bold"
+            >
               My Account
             </a>
           </div>
           <div className="flex-row justify-center items-center">
             <div className="flex justify-center items-center mb-3">
               <FaBuilding className="text-white mr-3" />
-              <a href="#" onClick={() => {activateCompanies(setComp)}} className="text-white font-bold">
+              <a
+                href="#"
+                onClick={() => {
+                  activateCompanies(setComp);
+                }}
+                className="text-white font-bold"
+              >
                 Companies
               </a>
             </div>
 
             <div className="flex justify-center items-center mb-3">
               <FaPeopleArrows className="text-white mr-3" />
-              <a href="#" onClick={() => {activateCompany(setComp)}} className="text-white font-bold">
+              <a
+                href="#"
+                onClick={() => {
+                  activateCompany(setComp);
+                }}
+                className="text-white font-bold"
+              >
                 Employees
               </a>
             </div>
 
             <div className="flex justify-center items-center mb-3">
               <FaScrewdriver className="text-white mr-3" />
-              <a href="#" onClick={() => {activateDevelopment(setComp)}} className="text-white font-bold">
+              <a
+                href="#"
+                onClick={() => {
+                  activateDevelopment(setComp);
+                }}
+                className="text-white font-bold"
+              >
                 Settings
               </a>
             </div>
@@ -107,13 +133,16 @@ export default function Home() {
           </p>
 
           <div className="bg-white rounded-2xl items-center justify-start p-5 shadow-2xl flex flex-col h-[85vh] overflow-y-scroll">
-
-                {active_comp === "companies" && <Companies token={token}/> }
-                {active_comp === "company" && <CompanyInfo/> }
-                {active_comp === "account" && <Account/> }
-                {active_comp === "dev" && <UnderDevelopment/>}
-                
-
+            {active_comp === "companies" && (
+              <Companies
+                token={token}
+                username={username}
+                password={password}
+              />
+            )}
+            {active_comp === "company" && <CompanyInfo />}
+            {active_comp === "account" && <Account />}
+            {active_comp === "dev" && <UnderDevelopment />}
           </div>
         </div>
       </main>
