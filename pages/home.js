@@ -8,12 +8,14 @@ import {
   FaScrewdriver,
 } from "react-icons/fa";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import { useContext, useEffect, useState } from "react";
+import Cookies from "universal-cookie";
 import Companies from "../components/companies";
 import CompanyInfo from "../components/companyInfo";
 import Account from "../components/account";
+import EmployeeInfo from "../components/employeeInfo";
 import UnderDevelopment from "../components/underDevelopment";
+import { RESPONSE_LIMIT_DEFAULT } from "next/dist/server/api-utils";
 
 const activateCompanies = (setter) => {
   setter("companies");
@@ -29,23 +31,37 @@ const activateDevelopment = (setter) => {
   setter("dev");
 };
 
-export default function Home() {
-  const router = useRouter();
-  const [active_comp, setComp] = useState("companies");
-  const [cookies, setCookie] = useCookies(["user"]);
+export async function getServerSideProps({ res, req }) {
+  const cookies = new Cookies(req.headers.cookie);
 
-  let username = "";
-  let password = "";
   let token = "";
 
-  try {
-    username = cookies.Username;
-    password = cookies.Password;
-    token = cookies.Token_cookie;
-    console.log(token);
-    console.log(username);
-    console.log(password);
-  } catch {}
+  token = cookies.get("Token_cookie");
+
+  let url = "http://localhost:8080/company?page=0&size=4";
+
+  let options = {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  };
+
+  const resp = await fetch(url, options);
+  const data = await resp.json();
+
+  return {
+    props: { data, token }, // will be passed to the page component as props
+  };
+}
+
+export default function Home({ data, token }) {
+  const router = useRouter();
+  const [active_comp, setComp] = useState("companies");
+  const [companyData, setCompanyData] = useState();
+  const [EmployeePrev, setEmployeePrev] = useState("employees");
+  const [EmployeeData, setEmployeeData] = useState();
+  console.log(data);
 
   useEffect(() => {
     if (token == "" || token == null) {
@@ -95,7 +111,7 @@ export default function Home() {
               <a
                 href="#"
                 onClick={() => {
-                  activateCompany(setComp);
+                  activateDevelopment(setComp);
                 }}
                 className="text-white font-bold"
               >
@@ -126,21 +142,39 @@ export default function Home() {
           </a>
         </div>
 
+        {/* This is the main division */}
         <div className="flex-1 bg-gray-100 p-5 h-screen">
           <p className="font-bold mb-5">
             {" "}
             <span className="text-cyan-600">Companies</span> Service
           </p>
 
+          {/* Division were the main components are placed */}
           <div className="bg-white rounded-2xl items-center justify-start p-5 shadow-2xl flex flex-col h-[85vh] overflow-y-scroll">
             {active_comp === "companies" && (
               <Companies
-                token={token}
-                username={username}
-                password={password}
+                data={data}
+                setComp={setComp}
+                setData={setCompanyData}
               />
             )}
-            {active_comp === "company" && <CompanyInfo />}
+            {active_comp === "company" && (
+              <CompanyInfo
+                setComp={setComp}
+                company={companyData}
+                setEmployeePrev={setEmployeePrev}
+                setEmployee={setEmployeeData}
+              />
+            )}
+            {active_comp === "employee" && (
+              <EmployeeInfo
+                setComp={setComp}
+                prev={EmployeePrev}
+                employee={EmployeeData}
+                setCompanyData={setCompanyData}
+                company={companyData}
+              />
+            )}
             {active_comp === "account" && <Account />}
             {active_comp === "dev" && <UnderDevelopment />}
           </div>

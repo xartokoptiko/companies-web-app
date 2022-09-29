@@ -1,54 +1,10 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import Company from "../components/company";
 import RefreshToken from "../lib/refreshToken";
 
-const getAllCompanies = (token, page, size) => {
-  const http = require("http");
-
-  const options = {
-    method: "GET",
-    hostname: "localhost",
-    port: "8080",
-    path: "/company?page="+page+"&size="+size,
-    headers: {
-      "Content-Length": "0",
-      Authorization:
-        "Bearer " + token ,
-    },
-  };
-
-  const req = http.request(options, function (res) {
-    const chunks = [];
-
-    res.on("data", function (chunk) {
-      chunks.push(chunk);
-    });
-
-    res.on("end", function () {
-        if(res.statusCode == 200){
-            const body = Buffer.concat(chunks);
-            console.log(body.toString());
-        }else{
-            RefreshToken()
-        }
-      
-    });
-  });
-
-  req.end();
-};
-
-const Companies = ({token, username, password}) => {
-    const router = useRouter()
-
-    useEffect(()=>{
-        if(token == "" || token == null){
-            router.push("/")
-        }
-    })
-
+const Companies = ({ data, setComp, setData }) => {
   return (
     <div className="w-full flex flex-col items-center ">
       <div className="flex flex-row justify-center items-center mb-5">
@@ -74,17 +30,18 @@ const Companies = ({token, username, password}) => {
       </div>
 
       <div className="border-2 w-full border-gray-200 inline-block mb-2 rounded-2xl"></div>
+      {data.forEach((company) => {
+        console.log(company);
+      })}
 
-      {getAllCompanies(token, 0, 3)}
-
-      <Company />
-      <Company />
-      <Company />
-      <Company />
-      <Company />
-      <Company />
-      <Company />
-      <Company />
+      {data.map((company, idx) => (
+        <Company
+          setComp={setComp}
+          setData={setData}
+          company={Object.values(company)}
+          key={idx}
+        />
+      ))}
     </div>
   );
 };
