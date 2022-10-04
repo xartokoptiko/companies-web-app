@@ -6,6 +6,8 @@ const back = (setComp, setCompanyData, prev, company) => {
   if(prev === "company"){
     setComp("company")
     setCompanyData(company)
+  }else if(prev === "employees"){
+    setComp("employees")
   }else{
     setComp("dev")
   }

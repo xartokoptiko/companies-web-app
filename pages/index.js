@@ -2,14 +2,13 @@ import Head from "next/head";
 import { useState } from "react";
 import { FaRegEnvelope, FaLock } from "react-icons/fa";
 import Router from "next/router";
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 
-const loginWithCRedentials = (
-  username,
-  password,
-  setUser,
-  setPass
-) => {
+// export async function getServerSideProps({ res, req }) {
+//   const cookies = new Cookies(req.headers.cookie);
+// }
+
+const loginWithCRedentials = (username, password, setUser, setPass) => {
   const qs = require("querystring");
   const http = require("http");
 
@@ -42,7 +41,9 @@ const loginWithCRedentials = (
 
         cookies.set("Username", username, { path: "/" });
         cookies.set("Password", password, { path: "/" });
-        cookies.set("Token_cookie", response_body["access_token"], { path: "/" });
+        cookies.set("Token_cookie", response_body["access_token"], {
+          path: "/",
+        });
 
         Router.push("/home");
       } else {
