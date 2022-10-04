@@ -1,4 +1,30 @@
 import { FaPen, FaClipboardList, FaTrash, FaSitemap } from "react-icons/fa";
+import Cookies from "universal-cookie";
+
+async function deleteEmployee(employee_id){
+  const cookies = new Cookies();
+  const token = cookies.get("Token_cookie");
+
+  let url = "http://localhost:8080/employee/" + employee_id;
+
+  let options = {
+    method: "DELETE",
+    headers: {
+      Authorization:
+        "Bearer " + token, 
+    },
+  };
+
+  const response = await fetch(url, options)
+  const status = response.status
+  if(status === 200){
+    alert("Employee deleted succesfully")
+  }else if(status === 404){
+    alert("Employee with id["+employee_id+"] wasnt found")
+  }else{
+    alert("an error occured....")
+  }
+};
 
 const showEmployeeInfo = (
   setComp,
@@ -41,8 +67,13 @@ const Employee = ({
         </div>
 
         <div className="flex flex-col p-1">
-          <FaTrash className="text-red-600 flex h-2/6 mb-1" />
-          <FaPen className="text-gray-600 flex h-2/6 mb-1" />
+          <FaTrash onClick={() => {deleteEmployee(employee[0])}} className="text-red-600 flex h-2/6 mb-1" />
+          <FaPen
+            onClick={() => {
+              setComp("dev");
+            }}
+            className="text-gray-600 flex h-2/6 mb-1"
+          />
           <FaClipboardList
             onClick={() =>
               showEmployeeInfo(
